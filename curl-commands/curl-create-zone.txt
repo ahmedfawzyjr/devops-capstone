@@ -1,0 +1,49 @@
+# curl-create-zone — Create a Delivery Zone
+# Task: CURL command to demonstrate CREATE (POST) for a zone
+# Saved as: curl-create-zone.txt
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# COMMAND:
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X POST http://localhost:5000/zones \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Zone-A", "region": "North"}' \
+  -s | python3 -m json.tool
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUT:
+# ─────────────────────────────────────────────────────────────────────────────
+{
+    "message": "Zone created",
+    "zone": {
+        "id": 1,
+        "name": "Zone-A",
+        "region": "North"
+    }
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HTTP Status: 201 Created
+# ─────────────────────────────────────────────────────────────────────────────
+# Description:
+#   This command sends a POST request to the /zones endpoint.
+#   The server creates a new delivery zone named "Zone-A" for the "North" region.
+#   The response confirms creation with the generated zone ID.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Alternative: Create Zone B ───────────────────────────────────────────────
+curl -X POST http://localhost:5000/zones \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Zone-B", "region": "South"}' \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "message": "Zone created",
+    "zone": {
+        "id": 2,
+        "name": "Zone-B",
+        "region": "South"
+    }
+}

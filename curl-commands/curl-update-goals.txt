@@ -1,0 +1,71 @@
+# curl-update-goals — Update an Account (PUT)
+# Task: CURL command to UPDATE the function of an account
+# Saved as: curl-update-goals.txt
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 1: Create an account first
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X POST http://localhost:5000/accounts \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Ahmed Fawzy", "email": "ahmed@example.com"}' \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "account": {
+        "email": "ahmed@example.com",
+        "id": 1,
+        "name": "Ahmed Fawzy"
+    },
+    "message": "Account created"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2: UPDATE the account goals/email (PUT request)
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X PUT http://localhost:5000/accounts/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Ahmed Fawzy Jr", "email": "ahmed.updated@example.com"}' \
+  -s | python3 -m json.tool
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUT:
+# ─────────────────────────────────────────────────────────────────────────────
+{
+    "account": {
+        "email": "ahmed.updated@example.com",
+        "id": 1,
+        "name": "Ahmed Fawzy Jr"
+    },
+    "message": "Account updated"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HTTP Status: 200 OK
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Update an ingredient ─────────────────────────────────────────────────────
+curl -X PUT http://localhost:5000/ingredients/1 \
+  -H "Content-Type: application/json" \
+  -d '{"quantity": 10, "unit": "kg"}' \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "ingredient": {
+        "id": 1,
+        "name": "Tomato",
+        "quantity": 10,
+        "unit": "kg"
+    },
+    "message": "Ingredient updated"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Description:
+#   PUT /accounts/1   — Updates name and email of account with ID 1.
+#   PUT /ingredients/1 — Updates quantity and unit of ingredient with ID 1.
+#   All update operations return HTTP 200 OK with the updated object.
+# ─────────────────────────────────────────────────────────────────────────────

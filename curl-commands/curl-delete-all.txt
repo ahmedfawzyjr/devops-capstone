@@ -1,0 +1,69 @@
+# curl-delete-all — Delete All Accounts (DELETE)
+# Task: CURL command to DELETE all accounts
+# Story: "Delete all accounts from the Docs column"
+# Saved as: curl-delete-all.txt
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 1: Verify accounts exist first (GET)
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X GET http://localhost:5000/accounts \
+  -s | python3 -m json.tool
+
+# OUTPUT (before delete):
+{
+    "accounts": [
+        {"email": "user1@test.com", "id": 1, "name": "User One"},
+        {"email": "user2@test.com", "id": 2, "name": "User Two"},
+        {"email": "user3@test.com", "id": 3, "name": "User Three"}
+    ],
+    "count": 3
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STEP 2: DELETE ALL accounts
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X DELETE http://localhost:5000/accounts \
+  -H "Content-Type: application/json" \
+  -s | python3 -m json.tool
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUT:
+# ─────────────────────────────────────────────────────────────────────────────
+{
+    "message": "Deleted all 3 accounts"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HTTP Status: 200 OK
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── STEP 3: Verify accounts are deleted ────────────────────────────────────
+curl -X GET http://localhost:5000/accounts \
+  -s | python3 -m json.tool
+
+# OUTPUT (after delete — empty list):
+{
+    "accounts": [],
+    "count": 0
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Delete a single account by ID ──────────────────────────────────────────
+curl -X DELETE http://localhost:5000/accounts/1 \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "message": "Account 1 deleted"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Description:
+#   DELETE /accounts      — Deletes ALL accounts (bulk delete).
+#   DELETE /accounts/:id  — Deletes a single account by ID.
+#
+#   This satisfies the story: "Delete all accounts from the Docs column"
+# ─────────────────────────────────────────────────────────────────────────────

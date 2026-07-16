@@ -1,0 +1,96 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub Actions — Release Workflow
+# Task 8: Named release using github-group-releasing
+# Story: "Add an ingredient to a food delivery app"
+# ─────────────────────────────────────────────────────────────────────────────
+name: Release — Add Ingredient to Food Delivery App
+
+on:
+  push:
+    tags:
+      - "v*.*.*"          # Triggers on version tags like v1.0.0, v1.2.3
+
+jobs:
+  release:
+    name: "Create GitHub Release"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag info
+        id: tag_info
+        run: |
+          echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies & run tests
+        run: |
+          pip install -r requirements.txt
+          touch app/__init__.py app/tests/__init__.py
+          python -m pytest app/tests/ -v --tb=short
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push release image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/devops-capstone:${{ steps.tag_info.outputs.TAG }}
+            ${{ secrets.DOCKER_USERNAME }}/devops-capstone:latest
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Release ${{ steps.tag_info.outputs.TAG }} — Add Ingredient to Food Delivery App"
+          body: |
+            ## 🚀 Release ${{ steps.tag_info.outputs.TAG }} — ${{ steps.tag_info.outputs.DATE }}
+
+            ### ✅ Story: Add an ingredient to a food delivery app
+
+            This release implements the **Add Ingredient** feature for the Food Delivery App,
+            allowing users to add, update, retrieve, and delete ingredients.
+
+            ### 📦 Docker Image
+            ```
+            docker pull ${{ secrets.DOCKER_USERNAME }}/devops-capstone:${{ steps.tag_info.outputs.TAG }}
+            ```
+
+            ### 🔄 What's Changed
+            - `POST /ingredients` — Add a new ingredient to the food delivery app
+            - `GET /ingredients` — Retrieve all ingredients
+            - `GET /ingredients/:id` — Retrieve ingredient by ID
+            - `PUT /ingredients/:id` — Update ingredient details
+            - `DELETE /ingredients/:id` — Remove ingredient
+            - Full CI/CD pipeline with automated tests
+            - Docker Hub auto-deployment
+
+            ### 🧪 Tests
+            All automated tests pass including:
+            - `test_add_ingredient_to_food_delivery_app` ✅
+            - `test_delete_all_accounts` ✅
+            - `test_create_zone` ✅
+
+            ### 🐳 Docker Hub
+            Image available at: `docker.io/${{ secrets.DOCKER_USERNAME }}/devops-capstone:${{ steps.tag_info.outputs.TAG }}`
+          draft: false
+          prerelease: false
+          generate_release_notes: true

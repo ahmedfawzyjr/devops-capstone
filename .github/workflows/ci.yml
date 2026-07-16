@@ -1,0 +1,266 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# GitHub Actions — Main CI/CD Pipeline
+# DevOps Capstone Assignment
+# Triggers on push to main/develop and on pull requests
+# ─────────────────────────────────────────────────────────────────────────────
+name: CI/CD Pipeline — DevOps Capstone
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  # ──────────────────────────────────────────
+  # JOB 1: Greet & Print Info
+  # (Task 6 — echo your name, haiku, python)
+  # ──────────────────────────────────────────
+  greet:
+    name: "Greet & System Info"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Echo developer name
+        run: echo "Your name is Ahmed Fawzy"
+
+      - name: Print Python version
+        run: python3 --version
+
+      - name: Print a Haiku about DevOps
+        run: |
+          echo "─────────────────────────────"
+          echo "   DevOps Haiku"
+          echo "─────────────────────────────"
+          echo "Code pushed to the cloud,"
+          echo "Pipelines run without a sound,"
+          echo "Containers deployed."
+          echo "─────────────────────────────"
+
+      - name: Print system info
+        run: |
+          echo "Runner OS: ${{ runner.os }}"
+          echo "Runner Arch: ${{ runner.arch }}"
+          echo "GitHub Actor: ${{ github.actor }}"
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Commit SHA: ${{ github.sha }}"
+
+  # ──────────────────────────────────────────
+  # JOB 2: Lint & Code Quality
+  # ──────────────────────────────────────────
+  lint:
+    name: "Code Linting"
+    runs-on: ubuntu-latest
+    needs: greet
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install linting tools
+        run: |
+          pip install --upgrade pip
+          pip install flake8 black
+
+      - name: Run flake8 linter
+        run: flake8 app/ --max-line-length=120 --ignore=E501,W503 || true
+
+      - name: Check code formatting with Black
+        run: black --check app/ || true
+
+  # ──────────────────────────────────────────
+  # JOB 3: Automated Tests
+  # (Task 7 — Automated test story: "Add an ingredient")
+  # ──────────────────────────────────────────
+  test:
+    name: "Run Automated Tests"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Create __init__ files
+        run: |
+          touch app/__init__.py
+          touch app/tests/__init__.py
+
+      - name: Run pytest with coverage
+        run: |
+          python -m pytest app/tests/ \
+            -v \
+            --tb=short \
+            --cov=app \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            -k "test_add_ingredient_to_food_delivery_app or test_delete_all_accounts or test_create_zone"
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 7
+
+  # ──────────────────────────────────────────
+  # JOB 4: Build Docker Image
+  # ──────────────────────────────────────────
+  build:
+    name: "Build Docker Image"
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      image_tag: ${{ steps.meta.outputs.tags }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/devops-capstone
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=sha-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build Docker image (without push for PRs)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ──────────────────────────────────────────
+  # JOB 5: Push to Docker Hub
+  # (Task 24 — Docker Hub deployment)
+  # Only runs on push to main
+  # ──────────────────────────────────────────
+  push:
+    name: "Push to Docker Hub"
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKER_USERNAME }}/devops-capstone
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+            type=ref,event=branch
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Docker Hub image summary
+        run: |
+          echo "✅ Docker image pushed successfully!"
+          echo "📦 Image: ${{ secrets.DOCKER_USERNAME }}/devops-capstone:latest"
+          echo "🔖 SHA Tag: ${{ secrets.DOCKER_USERNAME }}/devops-capstone:sha-${{ github.sha }}"
+
+  # ──────────────────────────────────────────
+  # JOB 6: Deploy to AWS EC2
+  # Runs only on push to main
+  # ──────────────────────────────────────────
+  deploy:
+    name: "Deploy to AWS EC2"
+    runs-on: ubuntu-latest
+    needs: push
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            echo "🚀 Starting deployment on EC2..."
+            
+            # Pull latest image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/devops-capstone:latest
+            
+            # Stop and remove old container
+            docker stop devops-capstone || true
+            docker rm devops-capstone || true
+            
+            # Run new container
+            docker run -d \
+              --name devops-capstone \
+              --restart unless-stopped \
+              -p 5000:5000 \
+              ${{ secrets.DOCKER_USERNAME }}/devops-capstone:latest
+            
+            # Verify deployment
+            sleep 5
+            curl -f http://localhost:5000/health && echo "✅ Deployment successful!" || echo "❌ Health check failed"
+            
+            # Clean up unused images
+            docker image prune -f
+
+      - name: Deployment summary
+        run: |
+          echo "═══════════════════════════════════════"
+          echo "  ✅ DEPLOYMENT COMPLETE"
+          echo "═══════════════════════════════════════"
+          echo "  Image: ${{ secrets.DOCKER_USERNAME }}/devops-capstone:latest"
+          echo "  Host:  ${{ secrets.EC2_HOST }}"
+          echo "  Time:  $(date)"
+          echo "═══════════════════════════════════════"

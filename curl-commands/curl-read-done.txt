@@ -1,0 +1,75 @@
+# curl-read-done — Read Item at Index (GET)
+# Task: CURL command to READ the function of item at index
+# Saved as: curl-read-done.txt
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# COMMAND: Read all ingredients
+# ─────────────────────────────────────────────────────────────────────────────
+
+curl -X GET http://localhost:5000/ingredients \
+  -H "Content-Type: application/json" \
+  -s | python3 -m json.tool
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUT:
+# ─────────────────────────────────────────────────────────────────────────────
+{
+    "count": 3,
+    "ingredients": [
+        {
+            "id": 1,
+            "name": "Tomato",
+            "quantity": 5,
+            "unit": "kg"
+        },
+        {
+            "id": 2,
+            "name": "Cheese",
+            "quantity": 2,
+            "unit": "kg"
+        },
+        {
+            "id": 3,
+            "name": "Basil",
+            "quantity": 10,
+            "unit": "leaves"
+        }
+    ]
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HTTP Status: 200 OK
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ─── Read a single ingredient by index/ID ─────────────────────────────────────
+curl -X GET http://localhost:5000/ingredients/1 \
+  -H "Content-Type: application/json" \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "id": 1,
+    "name": "Tomato",
+    "quantity": 5,
+    "unit": "kg"
+}
+
+# ─── Read a single account by index ──────────────────────────────────────────
+curl -X GET http://localhost:5000/accounts/1 \
+  -H "Content-Type: application/json" \
+  -s | python3 -m json.tool
+
+# OUTPUT:
+{
+    "email": "ahmed@example.com",
+    "id": 1,
+    "name": "Ahmed Fawzy"
+}
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Description:
+#   GET /ingredients    — Returns all ingredients in the food delivery app.
+#   GET /ingredients/1  — Returns the ingredient at index 1.
+#   GET /accounts/1     — Returns the account at index 1.
+#   All read operations return HTTP 200 OK.
+# ─────────────────────────────────────────────────────────────────────────────
