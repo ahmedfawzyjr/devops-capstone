@@ -1,0 +1,156 @@
+
+============================================================
+  Q26 - Root Endpoint: GET /
+============================================================
+$ curl -i -X GET http://127.0.0.1:5000/
+
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: application/json
+Content-Length: 52
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+{
+  "name": "Account REST API Service",
+  "version": "1.0"
+}
+
+
+============================================================
+  Q13 - CREATE Account: POST /accounts - 201 CREATED
+============================================================
+$ curl -i -X POST http://127.0.0.1:5000/accounts
+
+HTTP/1.1 201 CREATED
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: application/json
+Content-Length: 73
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+{
+  "email": "john@example.com",
+  "id": 2,
+  "name": "John Doe",
+  "phone": "555-1234"
+}
+
+
+============================================================
+  Q14 - LIST All Accounts: GET /accounts - 200 OK
+============================================================
+$ curl -i -X GET http://127.0.0.1:5000/accounts
+
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: application/json
+Content-Length: 215
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+[
+  {
+    "email": "john@example.com",
+    "id": 1,
+    "name": "John Doe",
+    "phone": "555-1234"
+  },
+  {
+    "email": "john@example.com",
+    "id": 2,
+    "name": "John Doe",
+    "phone": "555-1234"
+  },
+  {
+    "email": "jane@example.com",
+    "id": 3,
+    "name": "Jane Smith",
+    "phone": ""
+  }
+]
+
+
+============================================================
+  Q15 - READ Account: GET /accounts/1 - 200 OK
+============================================================
+$ curl -i -X GET http://127.0.0.1:5000/accounts/1
+
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: application/json
+Content-Length: 73
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+{
+  "email": "john@example.com",
+  "id": 1,
+  "name": "John Doe",
+  "phone": "555-1234"
+}
+
+
+============================================================
+  Q16 - UPDATE Account: PUT /accounts/1 - 200 OK
+============================================================
+$ curl -i -X PUT http://127.0.0.1:5000/accounts/1
+
+HTTP/1.1 200 OK
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: application/json
+Content-Length: 85
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+{
+  "email": "john.updated@example.com",
+  "id": 1,
+  "name": "John Updated",
+  "phone": "555-1234"
+}
+
+
+============================================================
+  Q17 - DELETE Account: DELETE /accounts/3 - 204 NO CONTENT
+============================================================
+$ curl -i -X DELETE http://127.0.0.1:5000/accounts/3
+
+HTTP/1.1 204 NO CONTENT
+Server: Werkzeug/3.1.8 Python/3.12.10
+Date: Thu, 16 Jul 2026 09:52:19 GMT
+Content-Type: text/html; charset=utf-8
+Access-Control-Allow-Origin: *
+Permissions-Policy: browsing-topics=()
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Connection: close
+
+(empty body)
+
