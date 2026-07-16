@@ -108,15 +108,19 @@ jobs:
           touch app/__init__.py
           touch app/tests/__init__.py
 
-      - name: Run pytest with coverage
+      - name: Lint with flake8
+        run: |
+          flake8 app/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 app/ --count --max-complexity=10 --max-line-length=127 --statistics || true
+
+      - name: Run unit tests with nose
         run: |
           python -m pytest app/tests/ \
             -v \
             --tb=short \
             --cov=app \
             --cov-report=term-missing \
-            --cov-report=xml:coverage.xml \
-            -k "test_add_ingredient_to_food_delivery_app or test_delete_all_accounts or test_create_zone"
+            --cov-report=xml:coverage.xml
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4

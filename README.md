@@ -1,9 +1,9 @@
-# DevOps Capstone Assignment
+# DevOps Capstone Project
 
-![CI/CD Pipeline](https://github.com/YOUR_USERNAME/devops-capstone/actions/workflows/ci.yml/badge.svg)
-![Tests](https://github.com/YOUR_USERNAME/devops-capstone/actions/workflows/test.yml/badge.svg)
-![Docker Hub](https://img.shields.io/docker/pulls/YOUR_DOCKERHUB_USERNAME/devops-capstone)
-![GitHub release](https://img.shields.io/github/v/release/YOUR_USERNAME/devops-capstone)
+[![CI/CD Pipeline](https://github.com/ahmedfawzyjr/devops-capstone-project/actions/workflows/ci.yml/badge.svg)](https://github.com/ahmedfawzyjr/devops-capstone-project/actions/workflows/ci.yml)
+[![Tests](https://github.com/ahmedfawzyjr/devops-capstone-project/actions/workflows/test.yml/badge.svg)](https://github.com/ahmedfawzyjr/devops-capstone-project/actions/workflows/test.yml)
+[![Docker Hub](https://img.shields.io/docker/pulls/ahmedfawzyjr/devops-capstone)](https://hub.docker.com/r/ahmedfawzyjr/devops-capstone)
+[![GitHub release](https://img.shields.io/github/v/release/ahmedfawzyjr/devops-capstone-project)](https://github.com/ahmedfawzyjr/devops-capstone-project/releases)
 
 ## 📖 About This Project
 
@@ -27,7 +27,7 @@ A **Food Delivery API** built with Python Flask, fully containerized with Docker
 
 ## 🔗 Project Links
 
-- **GitHub Repository:** `https://github.com/YOUR_USERNAME/devops-capstone`
+- **GitHub Repository:** `https://github.com/ahmedfawzyjr/devops-capstone-project`
 - **GitHub Actions (CICD):** `https://github.com/YOUR_USERNAME/devops-capstone/actions`
 - **Docker Hub Image:** `https://hub.docker.com/r/YOUR_DOCKERHUB_USERNAME/devops-capstone`
 - **GitHub Board:** `https://github.com/YOUR_USERNAME/devops-capstone/projects`
