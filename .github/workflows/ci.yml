@@ -145,7 +145,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/devops-capstone
+          images: ahmedfawzyjr/devops-capstone
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -189,7 +189,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ secrets.DOCKER_USERNAME }}/devops-capstone
+          images: ahmedfawzyjr/devops-capstone
           tags: |
             type=raw,value=latest
             type=sha,prefix=sha-

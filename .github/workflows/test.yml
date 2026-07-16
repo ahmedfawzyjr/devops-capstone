@@ -6,9 +6,11 @@ name: Automated Tests — Food Delivery App
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - '**'
   pull_request:
-    branches: ["**"]
+    branches:
+      - '**'
   workflow_dispatch:
 
 jobs:
