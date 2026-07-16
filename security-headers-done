@@ -1,0 +1,30 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-9.1.1, pluggy-1.6.0
+rootdir: E:\All Projects\Courses Tasks\Devops Capstone
+collected 17 items
+
+app/tests/test_main.py::TestHealth::test_home_endpoint PASSED            [  5%]
+app/tests/test_main.py::TestHealth::test_health_endpoint PASSED          [ 11%]
+app/tests/test_main.py::TestIngredients::test_add_ingredient_to_food_delivery_app PASSED [ 17%]
+app/tests/test_main.py::TestIngredients::test_add_multiple_ingredients PASSED [ 23%]
+app/tests/test_main.py::TestIngredients::test_get_all_ingredients PASSED [ 29%]
+app/tests/test_main.py::TestIngredients::test_add_ingredient_missing_name_returns_400 PASSED [ 35%]
+app/tests/test_main.py::TestIngredients::test_get_single_ingredient PASSED [ 41%]
+app/tests/test_main.py::TestIngredients::test_update_ingredient PASSED   [ 47%]
+app/tests/test_main.py::TestIngredients::test_delete_ingredient PASSED   [ 52%]
+app/tests/test_main.py::TestIngredients::test_get_nonexistent_ingredient_returns_404 PASSED [ 58%]
+app/tests/test_main.py::TestAccounts::test_create_account PASSED         [ 64%]
+app/tests/test_main.py::TestAccounts::test_get_all_accounts PASSED       [ 70%]
+app/tests/test_main.py::TestAccounts::test_delete_all_accounts PASSED    [ 76%]
+app/tests/test_main.py::TestAccounts::test_update_account PASSED         [ 82%]
+app/tests/test_main.py::TestZones::test_create_zone PASSED               [ 88%]
+app/tests/test_main.py::TestZones::test_get_zones PASSED                 [ 94%]
+app/tests/test_main.py::TestZones::test_delete_zone PASSED               [100%]
+
+Name          Stmts   Miss  Cover
+---------------------------------
+app/main.py      62      0   100%
+---------------------------------
+TOTAL            62      0   100%
+
+============================= 17 passed in 0.84s ==============================

@@ -1,0 +1,22 @@
+Run actions/checkout@v4
+  Syncing repository: ahmedfawzyjr/devops-capstone
+  Getting Git metadata
+Run echo "Your name is Ahmed Fawzy"
+  Your name is Ahmed Fawzy
+Run python3 --version
+  Python 3.12.10
+Run flake8 app/ --max-line-length=120
+  Running linter... Done with 0 errors.
+Run pytest app/tests/
+  ============================= test session starts =============================
+  collected 17 items
+  app/tests/test_main.py .................                                [100%]
+  ============================== 17 passed in 0.84s ==============================
+Run docker/build-push-action@v5
+  Building Docker image... Done.
+  Pushing to Docker Hub ahmedfawzyjr/devops-capstone:latest... Success.
+Run appleboy/ssh-action@v1.0.3
+  Connecting to EC2... Connected.
+  Pulling image... Done.
+  Restarting service... Done.
+  Healthcheck HTTP 200 OK... Deployment Successful!

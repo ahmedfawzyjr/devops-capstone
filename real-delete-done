@@ -1,0 +1,5 @@
+curl -X DELETE http://localhost:5000/accounts/1
+
+{
+  "message": "Account 1 deleted"
+}

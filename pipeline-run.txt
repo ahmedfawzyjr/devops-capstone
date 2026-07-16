@@ -1,0 +1,11 @@
+[checkout-code : clone] Cloning repository ahmedfawzyjr/devops-capstone...
+[checkout-code : clone] Successfully checked out commit 0435cfe
+[lint : flake8] Running flake8 app/ tests/ ... OK
+[test : pytest] Running pytest app/tests/ ... 17 passed in 0.84s ... OK
+[build-image : buildah] Building OCI image ahmedfawzyjr/devops-capstone:latest...
+[build-image : buildah] Writing image manifest... OK
+[deploy-kubernetes : kubectl] Applying deployment/accounts manifest...
+[deploy-kubernetes : kubectl] deployment.apps/accounts created
+[deploy-kubernetes : kubectl] service/accounts-service created
+[deploy-kubernetes : kubectl] Waiting for rollout status... deployment "accounts" successfully rolled out.
+PipelineRun devops-capstone-pipeline-run completed successfully!
